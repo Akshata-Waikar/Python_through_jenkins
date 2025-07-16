@@ -8,17 +8,17 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git branch: 'main', url: 'https://github.com/Akshata-Waikar/Python_through_jenkins'
+                git branch: 'main', url: 'https://github.com/Akshata-Waikar/Python_through_jenkins.git'
             }
         }
 
         stage('Install Dependencies') {
             steps {
                 sh '''
-                    sudo yum install -y python3 mysql
+                    yum install -y python3 mysql || true
                     curl -O https://bootstrap.pypa.io/get-pip.py
-                    sudo python3 get-pip.py
-                    sudo pip3 install flask mysql-connector-python
+                    python3 get-pip.py
+                    pip3 install flask mysql-connector-python
                 '''
             }
         }
@@ -26,8 +26,8 @@ pipeline {
         stage('Start MariaDB') {
             steps {
                 sh '''
-                    sudo systemctl start mariadb
-                    sudo systemctl enable mariadb
+                    systemctl start mariadb || true
+                    systemctl enable mariadb || true
                 '''
             }
         }
