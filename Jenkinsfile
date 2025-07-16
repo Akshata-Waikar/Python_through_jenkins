@@ -2,23 +2,32 @@ pipeline {
     agent any
 
     environment {
-        FLASK_APP = "app.py"
+        APP_DIR = "Python_through_jenkins"
     }
 
     stages {
         stage('Clone Repository') {
             steps {
-                git 'https://github.com/Akshata-Waikar/Python_through_jenkins.git'
+                git branch: 'main', url: 'https://github.com/Akshata-Waikar/Python_through_jenkins'
             }
         }
 
         stage('Install Dependencies') {
             steps {
                 sh '''
-                yum install python3 -y
-                curl -O https://bootstrap.pypa.io/get-pip.py
-                python3 get-pip.py
-                pip3 install flask mysql-connector-python
+                    sudo yum install -y python3 mysql
+                    curl -O https://bootstrap.pypa.io/get-pip.py
+                    sudo python3 get-pip.py
+                    sudo pip3 install flask mysql-connector-python
+                '''
+            }
+        }
+
+        stage('Start MariaDB') {
+            steps {
+                sh '''
+                    sudo systemctl start mariadb
+                    sudo systemctl enable mariadb
                 '''
             }
         }
@@ -26,10 +35,20 @@ pipeline {
         stage('Run Flask App') {
             steps {
                 sh '''
-                export FLASK_APP=app.py
-                nohup flask run --host=0.0.0.0 --port=5000 &
+                    cd $APP_DIR
+                    export FLASK_APP=app.py
+                    nohup flask run --host=0.0.0.0 --port=5000 > flask.log 2>&1 &
                 '''
             }
+        }
+    }
+
+    post {
+        failure {
+            echo '❌ Build failed!'
+        }
+        success {
+            echo '✅ Flask app deployed successfully!'
         }
     }
 }
