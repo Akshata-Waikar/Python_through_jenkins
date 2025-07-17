@@ -10,15 +10,18 @@ pipeline {
     stages {
         stage('Deploy to Live EC2') {
             steps {
-                sshagent (credentials: ["${SSH_KEY_ID}"]) {
+                sshagent (credentials: [SSH_KEY_ID]) {
                     sh """
                         ssh -o StrictHostKeyChecking=no $LIVE_SERVER '
                             pkill -f flask || true
                             rm -rf Python_through_jenkins
                             git clone $REPO_URL
                             cd Python_through_jenkins
+                            pip3 install -r requirements.txt || pip3 install flask
                             export FLASK_APP=app.py
-                            nohup flask run --host=0.0.0.0 > flask.log 2>&1 &
+                            nohup python3 -m flask run --host=0.0.0.0 > flask.log 2>&1 &
+                            sleep 3
+                            tail -n 10 flask.log
                         '
                     """
                 }
