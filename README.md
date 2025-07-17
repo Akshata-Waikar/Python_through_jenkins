@@ -47,45 +47,45 @@ Instance 1: Jenkins Server
 Instance 2: Live Web Server
 
 🔹 Step 2: Setup Jenkins Server
-sudo yum update -y
-sudo yum install docker -y
-sudo systemctl start docker
-sudo systemctl enable docker
-sudo usermod -aG docker ec2-user
-docker run -d --name jenkins -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home jenkins/jenkins:lts
+-  sudo yum update -y
+-  sudo yum install docker -y
+-  sudo systemctl start docker
+-  sudo systemctl enable docker
+-  sudo usermod -aG docker ec2-user
+-  docker run -d --name jenkins -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home jenkins/jenkins:lts
 
 🔹 Step 3: Setup Jenkins Job
-Create a Pipeline Job
-Configure GitHub repo and Jenkinsfile
-Use SSH Credentials to connect to the live EC2 server
+-  Create a Pipeline Job
+-  Configure GitHub repo and Jenkinsfile
+-  Use SSH Credentials to connect to the live EC2 server
 
 🔹 Step 4: Setup Live EC2 Web Server
-sudo yum update -y
-sudo yum install git python3 -y
-pip3 install flask mysql-connector-python
-git clone https://github.com/Akshata-Waikar/Python_through_jenkins.git
-cd Python_through_jenkins
+-  sudo yum update -y
+-  sudo yum install git python3 -y
+-  pip3 install flask mysql-connector-python
+-  git clone https://github.com/Akshata-Waikar/Python_through_jenkins.git
+-  cd Python_through_jenkins
 
 Update db_config in app.py with your RDS endpoint and credentials.
 
 🔹 Step 5: Setup RDS MySQL Database
-Create an Amazon RDS (MySQL) instance
-Database Name: studentsdb
-Table: students (as shown above)
+-  Create an Amazon RDS (MySQL) instance
+-  Database Name: studentsdb
+-  Table: students (as shown above)
 
 🔹 Step 6: Jenkinsfile Pipeline
-The Jenkinsfile handles:
-SSH to the live server
-Cloning the latest code
-Killing any existing Flask process
-Restarting the application
+-  The Jenkinsfile handles:
+-  SSH to the live server
+-  Cloning the latest code
+-  Killing any existing Flask process
+-  Restarting the application
 
 🔹 Step 7: Trigger Jenkins Build
-Automatically deploys updated Flask app to the live server
+-  Automatically deploys updated Flask app to the live server
 
 🔹 Step 8: Test Application
-Visit: http://<Live_EC2_Public_IP>:5000
-Submit form and check if data is stored in RDS.
+-  Visit: http://<Live_EC2_Public_IP>:5000
+-  Submit form and check if data is stored in RDS.
 
 ✅ Conclusion
 This project successfully implements a CI/CD pipeline using Jenkins to automate deployment of a Flask web application on AWS EC2, backed by an RDS MySQL database.
