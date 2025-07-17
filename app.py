@@ -20,16 +20,16 @@ def register():
         phone = request.form['phone']
         course = request.form['course']
         address = request.form['address']
-        contact = request.form['contact']
+       
 
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor()
 
         query = '''
-        INSERT INTO students (name, email, phone, course, address, contact)
-        VALUES (%s, %s, %s, %s, %s, %s)
+        INSERT INTO students (name, email, phone, course, address )
+        VALUES (%s, %s, %s, %s, %s)
         '''
-        values = (name, email, phone, course, address, contact)
+        values = (name, email, phone, course, address)
 
         cursor.execute(query, values)
         conn.commit()
