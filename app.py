@@ -5,9 +5,9 @@ app = Flask(__name__)
 
 # Database configuration
 db_config = {
-    'host': 'db',
-    'user': 'root',
-    'password': 'password',
+    'host': 'database-1.cx4ca8c0ew93.ap-northeast-1.rds.amazonaws.com',
+    'user': 'admin',
+    'password': 'akshata07',
     'database': 'studentsdb'
 }
 
