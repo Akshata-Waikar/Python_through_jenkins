@@ -13,15 +13,28 @@ pipeline {
                 sshagent (credentials: [SSH_KEY_ID]) {
                     sh """
                         ssh -o StrictHostKeyChecking=no $LIVE_SERVER '
-                            pkill -f flask || true
+                            echo "[1] ✅ Killing any running Flask app..."
+                            pkill -f flask || echo "Flask not running."
+
+                            echo "[2] ✅ Removing old project folder..."
                             rm -rf Python_through_jenkins
-                            git clone $REPO_URL
-                            cd Python_through_jenkins
-                            pip3 install -r requirements.txt || pip3 install flask
+
+                            echo "[3] ✅ Cloning fresh code..."
+                            git clone $REPO_URL || { echo "❌ Git clone failed."; exit 1; }
+
+                            echo "[4] ✅ Changing directory..."
+                            cd Python_through_jenkins || { echo "❌ cd failed."; exit 1; }
+
+                            echo "[5] ✅ Installing dependencies..."
+                            pip3 install -r requirements.txt || pip3 install flask || { echo "❌ pip install failed."; exit 1; }
+
+                            echo "[6] ✅ Starting Flask app..."
                             export FLASK_APP=app.py
                             nohup python3 -m flask run --host=0.0.0.0 > flask.log 2>&1 &
                             sleep 3
-                            tail -n 10 flask.log
+
+                            echo "[7] 📄 Showing log output..."
+                            tail -n 20 flask.log || echo "❌ Couldn't read log."
                         '
                     """
                 }
