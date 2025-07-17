@@ -2,53 +2,36 @@ pipeline {
     agent any
 
     environment {
-        APP_DIR = "Python_through_jenkins"
+        LIVE_SERVER = "ec2-user@43.207.200.231"
+        SSH_KEY_ID = "29b37194-4f68-40c3-bb2e-62dee141e2de"
+        REPO_URL = "https://github.com/Akshata-Waikar/Python_through_jenkins.git"
     }
 
     stages {
-        stage('Clone Repository') {
+        stage('Deploy to Live EC2') {
             steps {
-                git branch: 'main', url: 'https://github.com/Akshata-Waikar/Python_through_jenkins.git'
-            }
-        }
-
-        stage('Install Dependencies') {
-            steps {
-                sh '''
-                    yum install -y python3 mysql || true
-                    curl -O https://bootstrap.pypa.io/get-pip.py
-                    python3 get-pip.py
-                    pip3 install flask mysql-connector-python
-                '''
-            }
-        }
-
-        stage('Start MariaDB') {
-            steps {
-                sh '''
-                    systemctl start mariadb || true
-                    systemctl enable mariadb || true
-                '''
-            }
-        }
-
-        stage('Run Flask App') {
-            steps {
-                sh '''
-                    cd $APP_DIR
-                    export FLASK_APP=app.py
-                    nohup flask run --host=0.0.0.0 --port=5000 > flask.log 2>&1 &
-                '''
+                sshagent (credentials: ["${SSH_KEY_ID}"]) {
+                    sh """
+                        ssh -o StrictHostKeyChecking=no $LIVE_SERVER '
+                            pkill -f flask || true
+                            rm -rf Python_through_jenkins
+                            git clone $REPO_URL
+                            cd Python_through_jenkins
+                            export FLASK_APP=app.py
+                            nohup flask run --host=0.0.0.0 > flask.log 2>&1 &
+                        '
+                    """
+                }
             }
         }
     }
 
     post {
-        failure {
-            echo '❌ Build failed!'
-        }
         success {
-            echo '✅ Flask app deployed successfully!'
+            echo '✅ Deployment complete on live server.'
+        }
+        failure {
+            echo '❌ Deployment failed.'
         }
     }
 }
