@@ -27,16 +27,16 @@ Key integrations include:
 
 ## 🛠️ Technology Stack
 
-| Layer            | Tools/Services                          |
+| Layer            | Tools/Services                           |
 |------------------|------------------------------------------|
 | Frontend         | HTML (Form-based)                        |
-| Backend          | Python (Flask Framework)                |
-| Database         | MySQL (AWS RDS)                         |
-| CI/CD            | Jenkins (Pipeline Job)                  |
-| Version Control  | Git & GitHub                            |
-| Deployment       | AWS EC2 (Live server)                   |
-| Secure Access    | SSH Agent Plugin (Jenkins to EC2)       |
-| Cloud Platform   | Amazon Web Services (EC2, RDS)          |
+| Backend          | Python (Flask Framework)                 |
+| Database         | MySQL (AWS RDS)                          |
+| CI/CD            | Jenkins (Pipeline Job)                   |
+| Version Control  | Git & GitHub                             |
+| Deployment       | AWS EC2 (Live server)                    |
+| Secure Access    | SSH Agent Plugin (Jenkins to EC2)        |
+| Cloud Platform   | Amazon Web Services (EC2, RDS)           |
 
 ---
 
